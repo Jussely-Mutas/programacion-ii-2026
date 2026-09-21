@@ -1,0 +1,28 @@
+public abstract class Vehiculo {
+    private String placa;
+    private String propietario;
+    private String horaIngreso;
+    private double horasUtilizadas;
+
+    public Vehiculo(String placa, String propietario, String horaIngreso, double horasUtilizadas) {
+        this.placa = placa;
+        this.propietario = propietario;
+        this.horaIngreso = horaIngreso;
+        this.horasUtilizadas = horasUtilizadas;
+    }
+
+    public String getPlaca() { return placa; }
+    public String getPropietario() { return propietario; }
+    public String getHoraIngreso() { return horaIngreso; }
+    public double getHorasUtilizadas() { return horasUtilizadas; }
+
+    public abstract double calcularCosto();
+
+    public void mostrarInformacion() {
+        System.out.println("Placa: " + placa +
+                " | Propietario: " + propietario +
+                " | Hora Ingreso: " + horaIngreso +
+                " | Horas: " + horasUtilizadas +
+                " | Costo: Q" + String.format("%.2f", calcularCosto()));
+    }
+}
