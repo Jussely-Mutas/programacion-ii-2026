@@ -1,4 +1,5 @@
 package com.estudiante.proyecto_gimnasio.controller;
+
 import com.estudiante.proyecto_gimnasio.dto.MembresiaRequestDTO;
 import com.estudiante.proyecto_gimnasio.entity.Membresia;
 import com.estudiante.proyecto_gimnasio.service.MembresiaService;
@@ -28,7 +29,13 @@ public class MembresiaController {
 
     @GetMapping
     public ResponseEntity<List<Membresia>> listarTodas() {
-        return ResponseEntity.ok(membresiaService.obtenerTodas());
+        return ResponseEntity.ok(membresiaService.listarTodas());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Membresia> obtenerPorId(@PathVariable Long id) {
+        Membresia membresia = membresiaService.obtenerPorId(id);
+        return ResponseEntity.ok(membresia);
     }
 
     @GetMapping("/activas")

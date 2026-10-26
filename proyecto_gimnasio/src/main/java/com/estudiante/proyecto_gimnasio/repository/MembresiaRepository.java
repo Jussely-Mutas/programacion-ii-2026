@@ -16,8 +16,8 @@ public interface MembresiaRepository extends JpaRepository<Membresia, Long> {
 
     List<Membresia> findByFechaVencimientoBefore(LocalDate fecha);
 
-    List<Membresia> findByFechaVencimientoBetween(LocalDate hoy, LocalDate fechaLimite);
+    List<Membresia> findByFechaVencimientoBetween(LocalDate inicio, LocalDate fin);
 
-    @Query("SELECT SUM(m.plan.precio) FROM Membresia m WHERE m.plan.id = :planId")
+    @Query("SELECT SUM(p.precio) FROM Membresia m JOIN m.plan p WHERE p.id = :planId")
     BigDecimal calcularIngresosPorPlan(@Param("planId") Long planId);
 }
