@@ -199,6 +199,7 @@
         <div class="card">
             <h2>💳 Asignar Membresía</h2>
             <form id="membershipForm">
+
                 <select id="selectCliente" required>
                     <option value="">Seleccione un Cliente...</option>
                 </select>
@@ -263,6 +264,7 @@
 <script>
     const API_CLIENTES = 'http://localhost:8080/api/clientes';
     const API_MEMBRESIAS = 'http://localhost:8080/api/membresias';
+
     function mostrarAlerta(mensaje, esError = false) {
         const alertDiv = document.getElementById('globalAlert');
         alertDiv.style.display = 'block';
@@ -394,6 +396,7 @@
             if (res.ok) {
                 mostrarAlerta('¡Membresía asignada y creada con éxito!');
                 document.getElementById('membershipForm').reset();
+                document.getElementById('fechaInicio').valueAsDate = new Date();
             } else {
                 const errData = await res.json();
                 mostrarAlerta(errData.mensaje || 'Error al registrar la membresía.', true);
@@ -434,6 +437,7 @@
             mostrarAlerta('Error al ejecutar el filtro: ' + error.message, true);
         }
     }
+
     window.onload = () => {
         document.getElementById('fechaInicio').valueAsDate = new Date();
         cargarClientes();

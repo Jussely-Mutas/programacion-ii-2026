@@ -1,5 +1,4 @@
 package com.estudiante.proyecto_gimnasio.controller;
-
 import com.estudiante.proyecto_gimnasio.dto.MembresiaRequestDTO;
 import com.estudiante.proyecto_gimnasio.entity.Membresia;
 import com.estudiante.proyecto_gimnasio.service.MembresiaService;
@@ -13,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/membresias")
+@CrossOrigin(origins = "*")
 public class MembresiaController {
 
     private final MembresiaService membresiaService;

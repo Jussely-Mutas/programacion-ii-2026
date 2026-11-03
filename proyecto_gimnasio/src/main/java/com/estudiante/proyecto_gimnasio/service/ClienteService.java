@@ -1,42 +1,52 @@
 package com.estudiante.proyecto_gimnasio.service;
+import com.estudiante.proyecto_gimnasio.dto.ClienteDTO;
 import com.estudiante.proyecto_gimnasio.entity.Cliente;
+import com.estudiante.proyecto_gimnasio.exception.RecursoNoEncontradoException;
 import com.estudiante.proyecto_gimnasio.repository.ClienteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class ClienteService {
 
-    @Autowired
-    private ClienteRepository clienteRepository;
+    private final ClienteRepository clienteRepository;
 
-    public List<Cliente> listarClientes() {
+    public ClienteService(ClienteRepository clienteRepository) {
+        this.clienteRepository = clienteRepository;
+    }
+
+    public Cliente crearCliente(ClienteDTO dto) {
+        Cliente cliente = new Cliente();
+        cliente.setNombre(dto.getNombre());
+        cliente.setApellido(dto.getApellido());
+        cliente.setCorreo(dto.getCorreo());
+        cliente.setTelefono(dto.getTelefono());
+        cliente.setActivo(dto.isActivo());
+        return clienteRepository.save(cliente);
+    }
+
+    public List<Cliente> obtenerTodos() {
         return clienteRepository.findAll();
     }
 
-    public Optional<Cliente> buscarPorId(Long id) {
-        return clienteRepository.findById(id);
+    public Cliente obtenerPorId(Long id) {
+        return clienteRepository.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Cliente no encontrado con ID: " + id));
     }
 
-    public Cliente guardarCliente(Cliente cliente) {
+    public Cliente actualizarCliente(Long id, ClienteDTO dto) {
+        Cliente cliente = obtenerPorId(id);
+        cliente.setNombre(dto.getNombre());
+        cliente.setApellido(dto.getApellido());
+        cliente.setCorreo(dto.getCorreo());
+        cliente.setTelefono(dto.getTelefono());
+        cliente.setActivo(dto.isActivo());
         return clienteRepository.save(cliente);
     }
 
     public void eliminarCliente(Long id) {
-        clienteRepository.deleteById(id);
-    }
-
-    public Map<String, Object> obtenerResumenClientes() {
-        long totalClientes = clienteRepository.count();
-
-        Map<String, Object> resumen = new HashMap<>();
-        resumen.put("totalClientes", totalClientes);
-        resumen.put("estadoSistema", "Activo y Operativo");
-        return resumen;
+        Cliente cliente = obtenerPorId(id);
+        clienteRepository.delete(cliente);
     }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/planes")
+@CrossOrigin(origins = "*")
 public class PlanController {
 
     private final PlanService planService;
@@ -34,4 +35,17 @@ public class PlanController {
     public ResponseEntity<Plan> obtenerPlanPorId(@PathVariable Long id) {
         return ResponseEntity.ok(planService.obtenerPorId(id));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Plan> actualizarPlan(@PathVariable Long id, @Valid @RequestBody PlanRequestDTO dto) {
+        Plan planActualizado = planService.actualizarPlan(id, dto);
+        return ResponseEntity.ok(planActualizado);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarPlan(@PathVariable Long id) {
+        planService.eliminarPlan(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

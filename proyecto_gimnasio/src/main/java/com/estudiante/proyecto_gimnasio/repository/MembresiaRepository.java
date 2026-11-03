@@ -12,12 +12,13 @@ import java.util.List;
 @Repository
 public interface MembresiaRepository extends JpaRepository<Membresia, Long> {
 
+    List<Membresia> findByEstado(Membresia.EstadoMembresia estado);
     List<Membresia> findByFechaVencimientoGreaterThanEqual(LocalDate fecha);
-
     List<Membresia> findByFechaVencimientoBefore(LocalDate fecha);
 
-    List<Membresia> findByFechaVencimientoBetween(LocalDate inicio, LocalDate fin);
+    @Query("SELECT m FROM Membresia m WHERE m.estado = 'ACTIVA' AND m.fechaVencimiento BETWEEN :hoy AND :limite")
+    List<Membresia> findProximasAVencer(@Param("hoy") LocalDate hoy, @Param("limite") LocalDate limite);
 
-    @Query("SELECT SUM(p.precio) FROM Membresia m JOIN m.plan p WHERE p.id = :planId")
+    @Query("SELECT SUM(m.plan.precio) FROM Membresia m WHERE m.plan.id = :planId")
     BigDecimal calcularIngresosPorPlan(@Param("planId") Long planId);
 }
