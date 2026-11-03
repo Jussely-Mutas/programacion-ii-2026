@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membresias_de_gimnasio - PF-06</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: var(--primary);
+            margin: 0;
+            font-size: 2.2rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .grid-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-section { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid var(--primary);
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            color: var(--text-main);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        input, select {
+            padding: 10px 14px;
+            font-size: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        button {
+            padding: 10px 16px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        button:active { transform: scale(0.98); }
+
+        .btn-primary { background-color: var(--primary); color: white; }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+
+        .btn-warning { background-color: var(--warning); color: white; }
+        .btn-warning:hover { background-color: #d97706; }
+
+        .btn-danger { background-color: var(--danger); color: white; }
+        .btn-danger:hover { background-color: #dc2626; }
+
+        .btn-secondary { background-color: #64748b; color: white; }
+        .btn-secondary:hover { background-color: #475569; }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 15px;
+            display: none;
+        }
+        .alert-success { background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+        .alert-error { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+        .full-width { grid-column: 1 / -1; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+        }
+
+        tr:hover { background-color: #f8fafc; }
+
+        .actions-cell {
+            display: flex;
+            gap: 6px;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🏋️‍♂️ Sistema de Membresías de Gimnasio</h1>
+        <p>Panel de Control y Administración General — Proyecto PF-06</p>
+    </header>
+    <div id="globalAlert" class="alert"></div>
+
+    <div class="grid-section">
+        <div class="card">
+            <h2 id="formClientTitle">👤 Registrar Nuevo Cliente</h2>
+            <form id="clientForm">
+                <input type="hidden" id="clientId">
+                <input type="text" id="nombre" placeholder="Nombre" required>
+                <input type="text" id="apellido" placeholder="Apellido" required>
+                <input type="email" id="correo" placeholder="Correo electrónico" required>
+                <input type="text" id="telefono" placeholder="Teléfono" required>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn-primary" id="btnSaveClient" style="flex: 2;">Guardar Cliente</button>
+                    <button type="button" class="btn-secondary" id="btnCancelClient" style="display:none; flex: 1;" onclick="resetClientForm()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>💳 Asignar Membresía</h2>
+            <form id="membershipForm">
+                <select id="selectCliente" required>
+                    <option value="">Seleccione un Cliente...</option>
+                </select>
+                <select id="selectPlan" required>
+                    <option value="">Seleccione un Plan...</option>
+                    <option value="1">Plan Mensual Básico (30 días)</option>
+                    <option value="2">Plan Trimestral Pro (90 días)</option>
+                    <option value="3">Plan Semestral VIP (180 días)</option>
+                    <option value="4">Plan Anual Elite (365 días)</option>
+                </select>
+                <input type="date" id="fechaInicio" required>
+                <button type="submit" class="btn-primary" style="background-color: var(--success);">Crear Membresía</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card full-width">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <h2>📋 Listado de Clientes Registrados</h2>
+            <div class="filter-bar">
+                <button class="btn-secondary" onclick="cargarClientes()">🔄 Refrescar Listas</button>
+                <button class="btn-primary" onclick="cargarMembresiasActivas()">⚡ Filtro: Ver Membresías Activas</button>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Acciones (Modificar / Eliminar)</th>
+            </tr>
+            </thead>
+            <tbody id="tablaClientes">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card full-width" style="margin-top: 25px;">
+        <h2>📊 Reporte de Membresías (Filtros del Proyecto)</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>ID Membresía</th>
+                <th>Cliente</th>
+                <th>Plan ID</th>
+                <th>Fecha Inicio</th>
+                <th>Fecha Vencimiento</th>
+                <th>Estado</th>
+            </tr>
+            </thead>
+            <tbody id="tablaMembresias">
+            <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Use el botón de filtro superior para consultar los registros.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const API_CLIENTES = 'http://localhost:8080/api/clientes';
+    const API_MEMBRESIAS = 'http://localhost:8080/api/membresias';
+    function mostrarAlerta(mensaje, esError = false) {
+        const alertDiv = document.getElementById('globalAlert');
+        alertDiv.style.display = 'block';
+        alertDiv.className = esError ? 'alert alert-error' : 'alert alert-success';
+        alertDiv.textContent = mensaje;
+        setTimeout(() => { alertDiv.style.display = 'none'; }, 5000);
+    }
+
+    async function cargarClientes() {
+        try {
+            const res = await fetch(API_CLIENTES);
+            if (!res.ok) throw new Error('Error al conectar con el servidor.');
+            const clientes = await res.json();
+
+            const tbody = document.getElementById('tablaClientes');
+            const selectCliente = document.getElementById('selectCliente');
+
+            tbody.innerHTML = '';
+            selectCliente.innerHTML = '<option value="">Seleccione un Cliente...</option>';
+
+            clientes.forEach(c => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${c.id}</td>
+                        <td><b>${c.nombre}</b></td>
+                        <td><b>${c.apellido}</b></td>
+                        <td>${c.correo}</td>
+                        <td>${c.telefono}</td>
+                        <td class="actions-cell">
+                            <button class="btn-warning" onclick="prepararEdicion(${c.id}, '${c.nombre}', '${c.apellido}', '${c.correo}', '${c.telefono}')">Editar</button>
+                            <button class="btn-danger" onclick="eliminarCliente(${c.id})">Eliminar</button>
+                        </td>
+                    </tr>
+                `;
+
+                selectCliente.innerHTML += `<option value="${c.id}">${c.nombre} ${c.apellido}</option>`;
+            });
+        } catch (error) {
+            mostrarAlerta('No se pudieron cargar los clientes: ' + error.message, true);
+        }
+    }
+
+    document.getElementById('clientForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('clientId').value;
+        const data = {
+            nombre: document.getElementById('nombre').value,
+            apellido: document.getElementById('apellido').value,
+            correo: document.getElementById('correo').value,
+            telefono: document.getElementById('telefono').value
+        };
+
+        const metodo = id ? 'PUT' : 'POST';
+        const url = id ? `${API_CLIENTES}/${id}` : API_CLIENTES;
+
+        try {
+            const res = await fetch(url, {
+                method: metodo,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (res.ok) {
+                mostrarAlerta(id ? '¡Cliente modificado con éxito!' : '¡Cliente registrado con éxito!');
+                resetClientForm();
+                cargarClientes();
+            } else {
+                const errData = await res.json();
+                let mensajeError = errData.mensaje || 'Error de validación en los campos.';
+                if (errData.errores) {
+                    mensajeError += ' ' + Object.values(errData.errores).join(', ');
+                }
+                mostrarAlerta(mensajeError, true);
+            }
+        } catch (error) {
+            mostrarAlerta('Error de red al procesar la solicitud.', true);
+        }
+    });
+
+    function prepararEdicion(id, nombre, apellido, correo, telefono) {
+        document.getElementById('clientId').value = id;
+        document.getElementById('nombre').value = nombre;
+        document.getElementById('apellido').value = apellido;
+        document.getElementById('correo').value = correo;
+        document.getElementById('telefono').value = telefono;
+        document.getElementById('formClientTitle').textContent = '✏️ Modificar Cliente (ID: ' + id + ')';
+        document.getElementById('btnSaveClient').textContent = 'Actualizar Cambios';
+        document.getElementById('btnCancelClient').style.display = 'block';
+    }
+
+    function resetClientForm() {
+        document.getElementById('clientForm').reset();
+        document.getElementById('clientId').value = '';
+        document.getElementById('formClientTitle').textContent = '👤 Registrar Nuevo Cliente';
+        document.getElementById('btnSaveClient').textContent = 'Guardar Cliente';
+        document.getElementById('btnCancelClient').style.display = 'none';
+    }
+
+    async function eliminarCliente(id) {
+        if (!confirm('¿Está seguro de eliminar este registro del sistema?')) return;
+        try {
+            const res = await fetch(`${API_CLIENTES}/${id}`, { method: 'DELETE' });
+            if (res.ok || res.status === 204) {
+                mostrarAlerta('¡Registro eliminado con éxito!');
+                cargarClientes();
+            } else {
+                mostrarAlerta('No se pudo eliminar el registro (puede tener dependencias activas).', true);
+            }
+        } catch (error) {
+            mostrarAlerta('Error al intentar eliminar.', true);
+        }
+    }
+
+    document.getElementById('membershipForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = {
+            clienteId: parseInt(document.getElementById('selectCliente').value),
+            planId: parseInt(document.getElementById('selectPlan').value),
+            fechaInicio: document.getElementById('fechaInicio').value
+        };
+
+        try {
+            const res = await fetch(API_MEMBRESIAS, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (res.ok) {
+                mostrarAlerta('¡Membresía asignada y creada con éxito!');
+                document.getElementById('membershipForm').reset();
+            } else {
+                const errData = await res.json();
+                mostrarAlerta(errData.mensaje || 'Error al registrar la membresía.', true);
+            }
+        } catch (error) {
+            mostrarAlerta('Error de conexión con la API de membresías.', true);
+        }
+    });
+
+    async function cargarMembresiasActivas() {
+        try {
+            const res = await fetch(`${API_MEMBRESIAS}/activas`);
+            if (!res.ok) throw new Error('No se pudo obtener el filtro.');
+            const membresias = await res.json();
+
+            const tbody = document.getElementById('tablaMembresias');
+            tbody.innerHTML = '';
+
+            if (membresias.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No hay membresías activas registradas.</td></tr>';
+                return;
+            }
+
+            membresias.forEach(m => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${m.id}</td>
+                        <td>${m.cliente ? m.cliente.nombre + ' ' + m.cliente.apellido : 'N/A'}</td>
+                        <td>${m.plan ? m.plan.id : 'N/A'}</td>
+                        <td>${m.fechaInicio}</td>
+                        <td>${m.fechaVencimiento}</td>
+                        <td><span style="background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-weight: bold;">${m.estado}</span></td>
+                    </tr>
+                `;
+            });
+            mostrarAlerta('¡Filtro de membresías activas ejecutado con éxito!');
+        } catch (error) {
+            mostrarAlerta('Error al ejecutar el filtro: ' + error.message, true);
+        }
+    }
+    window.onload = () => {
+        document.getElementById('fechaInicio').valueAsDate = new Date();
+        cargarClientes();
+    };
+</script>
+
+</body>
+</html>
