@@ -1,86 +1,119 @@
-# 🏋️‍♂️ Sistema de Gestión de Gimnasio - API REST (Avance 1)
+# 🏋️‍♂️ Sistema de Gestión de Membresías de Gimnasio 
 
-Este proyecto consiste en el desarrollo de un servicio web RESTful para la gestión de membresías y clientes de un gimnasio. Desarrollado con **Java 17** y **Spring Boot 3**, utilizando **PostgreSQL** como sistema de gestión de base de datos relacional.
+## 👤 Datos del Estudiante
+* **Nombre completo:** Jussely Saraí Mutas Chitic
+* **Número de carné:** 9941-25-28221
+* **Proyecto:** PF-06
+
+---
+
+## 📋 Descripción del Problema
+El gimnasio requiere automatizar el control administrativo de sus clientes, planes de entrenamiento y la asignación de membresías vigentes. El sistema actual busca resolver la falta de control centralizado mediante una arquitectura robusta que garantice la persistencia relacional de los datos, la validación estricta de campos y un flujo de comunicación fluido entre un backend moderno basado en API REST y una interfaz web interactiva.
 
 ---
 
 ## 🛠️ Tecnologías Utilizadas
-
-* **Lenguaje:** Java 17
-* **Framework:** Spring Boot 3.1.5
-* **Persistencia:** Spring Data JPA
-* **Base de Datos:** PostgreSQL
-* **Validación:** Jakarta Bean Validation
-* **Gestor de Dependencias:** Maven
-* **Pruebas de API:** Postman
+* **Backend:** Java 17+, Spring Boot (Spring Data JPA, Spring Web, Validation).
+* **Base de Datos:** PostgreSQL, pgAdmin 4.
+* **Frontend:** HTML5, CSS3, JavaScript (Vanilla con peticiones asíncronas `fetch`).
+* **Herramientas de Desarrollo:** IntelliJ IDEA Ultimate, Postman, Git y GitHub.
 
 ---
 
-## 🗄️ Estructura de la Base de Datos
-
-La base de datos `membresias_de_gimnasio` cuenta con la tabla `cliente`, configurada con las siguientes restricciones y tipos de datos:
-
-| Columna | Tipo de Dato | Restricciones / Descripción |
-| :--- | :--- | :--- |
-| `id` | `BIGSERIAL` | Primary Key, Auto-incrementable |
-| `nombre` | `VARCHAR(255)` | Obligatorio (`@NotBlank`) |
-| `apellido` | `VARCHAR(255)` | Obligatorio (`@NotBlank`) |
-| `correo` | `VARCHAR(255)` | Único, formato válido de e-mail (`@Email`) |
-| `telefono` | `VARCHAR(255)` | Número de contacto del cliente |
-
----
-
-## 📌 Endpoints de la API (Avance 1)
-
-Base URL: `http://localhost:8080/api/clientes`
-
-| Método HTTP | Ruta (Endpoint) | Descripción |
-| :--- | :--- | :--- |
-| **GET** | `/api/clientes` | Obtiene la lista completa de todos los clientes registrados. |
-| **POST** | `/api/clientes` | Registra un nuevo cliente con validación de datos. |
-| **GET** | `/api/clientes/buscar?nombre={nombre}` | Filtra clientes por coincidencia en el nombre (ignore case). |
-| **GET** | `/api/clientes/resumen` | Retorna métricas generales del sistema. |
-
----
-
-## 📝 Ejemplo de Petición JSON (POST)
-
-**URL:** `http://localhost:8080/api/clientes`  
-**Header:** `Content-Type: application/json`
-
-```json
-{
-  "nombre": "Carlos",
-  "apellido": "Gómez",
-  "correo": "carlos.gomez@example.com",
-  "telefono": "55551234"
-}
+## 📂 Estructura General del Sistema
+```text
+proyecto_gimnasio/
+│
+├── src/main/java/com/estudiante/proyecto_gimnasio/
+│   ├── controller/      # Controladores REST (ClienteController, MembresiaController, PlanController)
+│   ├── dto/             # Objetos de transferencia de datos (DTOs)
+│   ├── entity/          # Entidades JPA (Cliente, Plan, Membresía)
+│   ├── repository/      # Repositorios Spring Data JPA
+│   └── service/         # Lógica de negocio y reglas operativas
+│
+├── src/main/resources/
+│   └── application.properties # Configuración de conexión a PostgreSQL
+│
+└── frontend/
+    └── index.html       # Panel de control web e interfaz de usuario
 ```
-## DTO, validaciones y manejo de errores
+___________________________________________________________________________________________________
+## ⚙️ Requisitos para Ejecutar el Proyecto
+* Tener instalado Java JDK 17 o superior.
 
-En esta sección se detalla la implementación de transferencia de datos, validaciones y gestión centralizada de excepciones para el módulo de membresías del sistema de gimnasio.
+* Tener instalado PostgreSQL y pgAdmin 4.
 
-* **Entidad utilizada:** 
-  Se utilizó la entidad `Membresia`, la cual mapea la tabla correspondiente en la base de datos PostgreSQL y se relaja mediante JPA con las entidades `Cliente` y `Plan`, gestionando fechas de inicio, vencimiento y el estado actual de la membresía.
+* Un entorno de desarrollo compatible con Java (como IntelliJ IDEA).
 
-* **DTO creado:** 
-  Se implementó `MembresiaRequestDTO` para encapsular y transferir de forma segura los datos requeridos al registrar o actualizar una membresía ( IDs de cliente y plan, y fecha de inicio opcional).
+* Un navegador web moderno (Google Chrome, Edge, Firefox, etc.) para visualizar la interfaz.
+```
+_______________________________________________________________________________________
+## 🗄️ Configuración de PostgreSQL
+Crea una base de datos en PostgreSQL llamada proyecto_gimnasio.
 
-* **Validaciones implementadas:** 
-  Se aplicaron validaciones mediante anotaciones de Jakarta Bean Validation (como `@NotNull`, `@Positive`, etc.) en los DTOs y controladores (`@Valid`) para asegurar que los datos de entrada cumplan con los requisitos de negocio antes de ser procesados.
+Verifica los parámetros de conexión en tu archivo src/main/resources/application.properties:
+spring.datasource.url=jdbc:postgresql://localhost:5432/proyecto_gimnasio
+spring.datasource.username=postgres
+spring.datasource.password=tu_contraseña
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```
+___________________________________________________________________________________________
+## 🚀 Instrucciones para Iniciar el Backend
+Clona o abre el proyecto backend en IntelliJ IDEA.
 
-* **Excepción personalizada:** 
-  Se creó la clase `RecursoNoEncontradoException` para manejar de forma específica los escenarios donde un recurso consultado (por ejemplo, una membresía por ID) no existe en la base de datos.
+Espera a que Maven descargue e indexe todas las dependencias del archivo pom.xml.
 
-* **Códigos HTTP utilizados:** 
-  * `200 OK`: Para consultas y listados exitosos.
-  * `201 Created`: Para el registro exitoso de una nueva membresía.
-  * `400 Bad Request`: Para errores de validación en los datos enviados.
-  * `404 Not Found`: Cuando no se encuentra un recurso solicitado (ej. ID inexistente).
+Ejecuta la clase principal del proyecto (ProyectoGimnasioApplication.java) o presiona el botón verde de Play (Run).
 
-* **Forma de ejecutar y probar la API:** 
-  1. Abrir el proyecto en IntelliJ IDEA.
-  2. Ejecutar la clase principal `ProyectoGimnasioApplication`.
-  3. Realizar las peticiones HTTP (GET, POST, etc.) utilizando Postman apuntando a `http://localhost:8080/api/membresias`.
-_______________________________________________________
-**Nombre del Estudiante:** Jussely Saraí Mutas Chitic
+Confirma en la consola que el servidor Tomcat ha iniciado correctamente en el puerto 8080.
+```
+
+
+## 🌐 Instrucciones para Abrir el Frontend
+Localiza el archivo con la interfaz gráfica (index.html) en tu equipo.
+
+Haz doble clic sobre él para abrirlo directamente en tu navegador web favorito.
+
+Utiliza el botón "🔄 Refrescar Listas" para verificar la comunicación inmediata con la API y cargar los registros desde la base de datos.
+
+```
+
+## 🔌 Descripción de los Endpoints
+Clientes (/api/clientes):
+
+GET /api/clientes - Lista todos los clientes registrados.
+
+POST /api/clientes - Registra un nuevo cliente con validaciones Jakarta (@Valid).
+
+PUT /api/clientes/{id} - Actualiza los datos de un cliente existente.
+
+DELETE /api/clientes/{id} - Elimina un cliente del sistema.
+
+Planes (/api/planes):
+
+GET /api/planes - Obtiene el catálogo de planes disponibles.
+
+POST /api/planes - Crea un nuevo plan de membresía.
+
+PUT /api/planes/{id} - Actualiza un plan existente.
+
+DELETE /api/planes/{id} - Elimina un plan del sistema.
+
+Membresías (/api/membresias):
+
+POST /api/membresias - Asigna una membresía vinculando a un cliente y un plan.
+
+GET /api/membresias - Lista todas las membresías creadas.
+
+GET /api/membresias/activas - Filtro dedicado para consultar únicamente las membresías vigentes/activas.
+
+```
+
+## ⚖️ Reglas Principales del Negocio
+Cálculo dinámico de estados: El estado de las membresías (Activa o Vencida) se calcula en tiempo real con base en la fecha de inicio del plan y su duración asociada.
+
+Políticas CORS habilitadas: Se configuró @CrossOrigin(origins = "*") en los controladores para permitir la comunicación segura y sin restricciones entre la interfaz web y el servidor local.
+
+Validación de datos: Uso estricto de DTOs y anotaciones Jakarta para asegurar la integridad de la información antes de persistirla en PostgreSQL.
+
